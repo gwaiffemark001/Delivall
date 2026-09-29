@@ -1,7 +1,14 @@
+export type DeliveryStatus =
+  | 'pending'
+  | 'in_transit'
+  | 'out_for_delivery'
+  | 'delivered'
+  | 'failed';
+
 export interface Delivery {
   id: string;
   trackingNumber: string;
-  status: 'pending' | 'in_transit' | 'out_for_delivery' | 'delivered' | 'failed';
+  status: DeliveryStatus;
   origin: Location;
   destination: Location;
   currentLocation: Location | null;

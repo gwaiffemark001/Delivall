@@ -1,4 +1,4 @@
-import { Delivery } from '@/types';
+import { Delivery, DeliveryStatus } from '@/types';
 
 export const mockDeliveries: Delivery[] = [
   {
@@ -166,4 +166,15 @@ export const getDeliveryByTrackingNumber = (trackingNumber: string): Delivery | 
 
 export const getAllDeliveries = (): Delivery[] => {
   return mockDeliveries;
+};
+
+export const filterDeliveriesByStatus = (
+  deliveries: Delivery[],
+  status: DeliveryStatus | 'all',
+): Delivery[] => {
+  if (status === 'all') {
+    return deliveries;
+  }
+
+  return deliveries.filter((delivery) => delivery.status === status);
 };
