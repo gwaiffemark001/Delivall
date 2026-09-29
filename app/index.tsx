@@ -2,15 +2,25 @@ import { useState } from 'react';
 import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import DeliveryCard from '@/components/DeliveryCard';
+import DeliveryStatusFilter, {
+  DeliveryStatusFilterValue,
+} from '@/components/DeliveryStatusFilter';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { getAllDeliveries, getDeliveryByTrackingNumber } from '@/data/mockData';
+import {
+  filterDeliveriesByStatus,
+  getAllDeliveries,
+  getDeliveryByTrackingNumber,
+} from '@/data/mockData';
 import { Delivery } from '@/types';
 
 export default function Index() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [deliveries, setDeliveries] = useState<Delivery[]>(getAllDeliveries());
+  const [selectedStatus, setSelectedStatus] =
+    useState<DeliveryStatusFilterValue>('all');
   const [isLoading, setIsLoading] = useState(false);
+  const visibleDeliveries = filterDeliveriesByStatus(deliveries, selectedStatus);
 
   const handleSearch = () => {
     if (!searchQuery.trim()) {
@@ -33,9 +43,15 @@ export default function Index() {
 
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
-      <Text style={styles.emptyTitle}>No deliveries found</Text>
+      <Text style={styles.emptyTitle}>
+        {deliveries.length === 0
+          ? 'No delivery found'
+          : `No ${selectedStatus.replace(/_/g, ' ')} deliveries`}
+      </Text>
       <Text style={styles.emptySubtitle}>
-        {searchQuery ? 'Try a different tracking number' : 'Add a new delivery to get started'}
+        {deliveries.length === 0
+          ? (searchQuery ? 'Check the tracking number and try again' : 'Add a new delivery to get started')
+          : 'Select All to see deliveries in every status'}
       </Text>
     </View>
   );
@@ -56,11 +72,17 @@ export default function Index() {
         </TouchableOpacity>
       </View>
 
+      <DeliveryStatusFilter
+        deliveries={deliveries}
+        selectedStatus={selectedStatus}
+        onSelectStatus={setSelectedStatus}
+      />
+
       {isLoading ? (
         <LoadingSpinner />
       ) : (
         <FlatList
-          data={deliveries}
+          data={visibleDeliveries}
           renderItem={({ item }) => (
             <DeliveryCard 
               delivery={item} 
