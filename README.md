@@ -68,7 +68,8 @@ delivery-tracker/
 ### Tracking a Delivery
 
 1. Enter a tracking number in the search bar (e.g., `TRK1234567890`)
-2. View the delivery details including:
+2. Use the status filters below the search bar to narrow the delivery list. Counts reflect the current results; choose **All** to clear the status filter.
+3. View delivery details including:
    - Current status
    - Origin and destination
    - Estimated delivery date
